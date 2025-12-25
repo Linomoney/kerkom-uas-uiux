@@ -1,0 +1,1686 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard Admin - Barokah Umroh</title>
+
+    <!-- Bootstrap & AdminLTE CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap4.min.css" />
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+      :root {
+        --primary-color: #22c55e;
+        --secondary-color: #1e293b;
+        --success-color: #22c55e;
+        --warning-color: #fbbf24;
+        --danger-color: #ef4444;
+        --info-color: #3b82f6;
+      }
+
+      .custom-card {
+        border-radius: 10px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        overflow: hidden;
+      }
+
+      .custom-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      }
+
+      .stat-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+      }
+
+      .badge-status {
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
+
+      .custom-table {
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid #e2e8f0;
+      }
+
+      .custom-modal {
+        border-radius: 15px;
+        overflow: hidden;
+      }
+
+      .modal-header-custom {
+        background: linear-gradient(135deg, var(--secondary-color) 0%, #0f172a 100%);
+        color: white;
+        border-bottom: none;
+      }
+
+      .sidebar-custom {
+        background: linear-gradient(135deg, var(--secondary-color) 0%, #0f172a 100%);
+      }
+
+      .navbar-custom {
+        background: linear-gradient(135deg, var(--primary-color) 0%, #16a34a 100%);
+        color: white;
+      }
+
+      .btn-success-custom {
+        background: var(--success-color);
+        border-color: var(--success-color);
+      }
+
+      .btn-success-custom:hover {
+        background: #16a34a;
+        border-color: #16a34a;
+      }
+
+      .notification-badge {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background: var(--danger-color);
+        color: white;
+        border-radius: 50%;
+        min-width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 0 6px;
+      }
+
+      .menu-item-active {
+        background: rgba(34, 197, 94, 0.1);
+        color: var(--success-color) !important;
+        border-left: 3px solid var(--success-color);
+      }
+
+      .package-card {
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid #e2e8f0;
+        transition: all 0.3s ease;
+      }
+
+      .package-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .package-header {
+        padding: 20px;
+        text-align: center;
+        color: white;
+      }
+
+      .gradient-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
+
+      .gradient-success {
+        background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+      }
+
+      .gradient-warning {
+        background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+      }
+
+      .gradient-danger {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+      }
+
+      .gradient-info {
+        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      }
+
+      @media (max-width: 768px) {
+        .stat-icon {
+          width: 50px;
+          height: 50px;
+          font-size: 1.25rem;
+        }
+
+        .custom-card {
+          margin-bottom: 15px;
+        }
+      }
+    </style>
+  </head>
+  <body class="hold-transition sidebar-mini layout-fixed">
+    <div class="wrapper">
+      <!-- Navbar -->
+      <nav class="main-header navbar navbar-expand navbar-white navbar-light border-bottom-0">
+        <!-- Left navbar links -->
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button">
+              <i class="fas fa-bars"></i>
+            </a>
+          </li>
+        </ul>
+
+        <!-- Right navbar links -->
+        <ul class="navbar-nav ml-auto">
+          <!-- Messages Dropdown Menu -->
+          <li class="nav-item dropdown">
+            <a class="nav-link" data-toggle="dropdown" href="#">
+              <i class="far fa-bell"></i>
+              <span class="notification-badge" id="topNotifBadge">0</span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+              <span class="dropdown-header">Notifikasi</span>
+              <div class="dropdown-divider"></div>
+              <a href="javascript:void(0);" class="dropdown-item" onclick="showSection('messages')">
+                <i class="fas fa-envelope mr-2"></i> Pesan baru
+                <span class="float-right text-muted text-sm" id="notificationCount">0</span>
+              </a>
+              <div class="dropdown-divider"></div>
+              <a href="javascript:void(0);" class="dropdown-item dropdown-footer" onclick="showSection('messages')">Lihat Semua Pesan</a>
+            </div>
+          </li>
+
+          <!-- User Dropdown Menu -->
+          <li class="nav-item dropdown">
+            <a class="nav-link" data-toggle="dropdown" href="#">
+              <i class="fas fa-user-circle"></i>
+              <span class="ml-2 d-none d-md-inline" id="adminName">Admin</span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right">
+              <a href="javascript:void(0);" class="dropdown-item"> <i class="fas fa-user mr-2"></i> Profil </a>
+              <div class="dropdown-divider"></div>
+              <a href="javascript:void(0);" class="dropdown-item" onclick="logout()"> <i class="fas fa-sign-out-alt mr-2"></i> Logout </a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Sidebar -->
+      <aside class="main-sidebar sidebar-dark-primary sidebar-custom elevation-4">
+        <!-- Brand Logo -->
+        <a href="javascript:void(0);" class="brand-link" onclick="showSection('dashboard')">
+          <i class="fas fa-kaaba brand-icon" style="color: var(--success-color)"></i>
+          <span class="brand-text font-weight-bold">Barokah Umroh</span>
+          <small class="brand-text d-block">Admin Panel</small>
+        </a>
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+          <!-- Sidebar Menu -->
+          <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+              <li class="nav-item">
+                <a href="javascript:void(0);" class="nav-link active" onclick="showSection('dashboard')">
+                  <i class="nav-icon fas fa-home"></i>
+                  <p>Dashboard</p>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a href="javascript:void(0);" class="nav-link" onclick="showSection('messages')">
+                  <i class="nav-icon fas fa-envelope"></i>
+                  <p>Pesan Masuk</p>
+                  <span class="notification-badge" id="messageBadge">0</span>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a href="javascript:void(0);" class="nav-link" onclick="showSection('jamaah')">
+                  <i class="nav-icon fas fa-users"></i>
+                  <p>Data Jamaah</p>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a href="javascript:void(0);" class="nav-link" onclick="showSection('packages')">
+                  <i class="nav-icon fas fa-box"></i>
+                  <p>Kelola Paket</p>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a href="javascript:void(0);" class="nav-link" onclick="showSection('reports')">
+                  <i class="nav-icon fas fa-chart-line"></i>
+                  <p>Laporan</p>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </aside>
+
+      <!-- Content Wrapper -->
+      <div class="content-wrapper">
+        <!-- Content Header -->
+        <div class="content-header">
+          <div class="container-fluid">
+            <div class="row mb-2">
+              <div class="col-sm-6">
+                <h1 class="m-0" id="pageTitle">Dashboard</h1>
+              </div>
+              <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                  <li class="breadcrumb-item"><a href="javascript:void(0);" onclick="showSection('dashboard')">Home</a></li>
+                  <li class="breadcrumb-item active" id="breadcrumbActive">Dashboard</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Content -->
+        <section class="content">
+          <div class="container-fluid">
+            <!-- Dashboard Section -->
+            <div id="dashboard-section">
+              <!-- Welcome -->
+              <div class="row mb-4">
+                <div class="col-12">
+                  <div class="card custom-card">
+                    <div class="card-body">
+                      <h5 class="card-title">Selamat datang kembali, <span id="welcomeName">Admin</span>!</h5>
+                      <p class="card-text">Ini adalah panel admin untuk mengelola data jamaah dan paket umroh.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Stats Cards -->
+              <div class="row">
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                  <div class="card custom-card">
+                    <div class="card-body">
+                      <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                          <h5 class="card-title text-muted">Total Pesan</h5>
+                          <h2 class="mb-0" id="totalMessages">0</h2>
+                          <small class="text-success"> <i class="fas fa-arrow-up mr-1"></i>Bulan ini </small>
+                        </div>
+                        <div class="stat-icon bg-blue-100 text-blue-600">
+                          <i class="fas fa-envelope"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                  <div class="card custom-card">
+                    <div class="card-body">
+                      <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                          <h5 class="card-title text-muted">Total Jamaah</h5>
+                          <h2 class="mb-0" id="totalJamaah">0</h2>
+                          <small class="text-success"> <i class="fas fa-arrow-up mr-1"></i>Terdaftar </small>
+                        </div>
+                        <div class="stat-icon bg-green-100 text-green-600">
+                          <i class="fas fa-users"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                  <div class="card custom-card">
+                    <div class="card-body">
+                      <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                          <h5 class="card-title text-muted">Jamaah Aktif</h5>
+                          <h2 class="mb-0" id="activeJamaah">0</h2>
+                          <small class="text-success"> <i class="fas fa-check mr-1"></i>Berangkat </small>
+                        </div>
+                        <div class="stat-icon bg-purple-100 text-purple-600">
+                          <i class="fas fa-plane-departure"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                  <div class="card custom-card">
+                    <div class="card-body">
+                      <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                          <h5 class="card-title text-muted">Total Paket</h5>
+                          <h2 class="mb-0" id="totalPackages">0</h2>
+                          <small class="text-success"> <i class="fas fa-box mr-1"></i>Tersedia </small>
+                        </div>
+                        <div class="stat-icon bg-yellow-100 text-yellow-600">
+                          <i class="fas fa-gift"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Charts -->
+              <div class="row mt-4">
+                <div class="col-lg-6 col-md-12">
+                  <div class="card custom-card">
+                    <div class="card-header">
+                      <h3 class="card-title">Jamaah Per Bulan</h3>
+                    </div>
+                    <div class="card-body">
+                      <canvas id="jamaahChart" height="250"></canvas>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-6 col-md-12">
+                  <div class="card custom-card">
+                    <div class="card-header">
+                      <h3 class="card-title">Status Jamaah</h3>
+                    </div>
+                    <div class="card-body">
+                      <canvas id="statusChart" height="250"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Messages Section -->
+            <div id="messages-section" class="d-none">
+              <div class="row mb-4">
+                <div class="col-12">
+                  <div class="card custom-card">
+                    <div class="card-header">
+                      <h3 class="card-title">Pesan Masuk</h3>
+                      <div class="card-tools">
+                        <button onclick="exportMessages()" class="btn btn-success-custom btn-sm"><i class="fas fa-download mr-2"></i>Export JSON</button>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <div class="row mb-3">
+                        <div class="col-md-6">
+                          <input type="text" id="searchMessages" placeholder="Cari pesan..." onkeyup="renderMessages()" class="form-control" />
+                        </div>
+                      </div>
+                      <div class="table-responsive">
+                        <table class="table table-hover table-bordered custom-table" id="messagesTable">
+                          <thead class="thead-light">
+                            <tr>
+                              <th>Nama</th>
+                              <th>Email</th>
+                              <th>Telepon</th>
+                              <th>Paket</th>
+                              <th>Tanggal</th>
+                              <th class="text-center">Aksi</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <!-- Data akan diisi oleh JavaScript -->
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Jamaah Section -->
+            <div id="jamaah-section" class="d-none">
+              <div class="row mb-4">
+                <div class="col-12">
+                  <div class="card custom-card">
+                    <div class="card-header">
+                      <h3 class="card-title">Data Jamaah</h3>
+                      <div class="card-tools">
+                        <button onclick="openJamaahModal()" class="btn btn-success-custom btn-sm mr-2"><i class="fas fa-plus mr-2"></i>Tambah Jamaah</button>
+                        <button onclick="exportJamaah()" class="btn btn-info btn-sm"><i class="fas fa-download mr-2"></i>Export JSON</button>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <div class="row mb-3">
+                        <div class="col-md-6">
+                          <input type="text" id="searchJamaah" placeholder="Cari jamaah..." onkeyup="renderJamaah()" class="form-control" />
+                        </div>
+                      </div>
+                      <div class="table-responsive">
+                        <table class="table table-hover table-bordered custom-table" id="jamaahTable">
+                          <thead class="thead-light">
+                            <tr>
+                              <th>Nama</th>
+                              <th>NIK</th>
+                              <th>Telepon</th>
+                              <th>Paket</th>
+                              <th>Status</th>
+                              <th>Tanggal Daftar</th>
+                              <th class="text-center">Aksi</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <!-- Data akan diisi oleh JavaScript -->
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Packages Section -->
+            <div id="packages-section" class="d-none">
+              <div class="row mb-4">
+                <div class="col-12">
+                  <div class="card custom-card">
+                    <div class="card-header">
+                      <h3 class="card-title">Kelola Paket</h3>
+                      <div class="card-tools">
+                        <button onclick="openPackageModal()" class="btn btn-success-custom btn-sm"><i class="fas fa-plus mr-2"></i>Tambah Paket</button>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <div class="row" id="packagesGrid">
+                        <!-- Packages akan diisi oleh JavaScript -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Reports Section -->
+            <div id="reports-section" class="d-none">
+              <div class="row">
+                <div class="col-lg-6 col-md-12">
+                  <div class="card custom-card">
+                    <div class="card-header">
+                      <h3 class="card-title">Laporan Bulanan</h3>
+                    </div>
+                    <div class="card-body">
+                      <div class="list-group">
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                          Total Pesan Bulan Ini
+                          <span class="badge badge-success badge-pill" id="reportMessages">0</span>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                          Jamaah Terdaftar Bulan Ini
+                          <span class="badge badge-success badge-pill" id="reportJamaah">0</span>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                          Jamaah Berangkat Bulan Ini
+                          <span class="badge badge-success badge-pill" id="reportBerangkat">0</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-6 col-md-12">
+                  <div class="card custom-card">
+                    <div class="card-header">
+                      <h3 class="card-title">Paket Terpopuler</h3>
+                    </div>
+                    <div class="card-body">
+                      <div id="popularPackages">
+                        <!-- Will be populated by JS -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Footer -->
+      <footer class="main-footer">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12 text-center"><strong>Barokah Umroh &copy; 2025</strong> - Admin Panel</div>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Message Detail Modal -->
+    <div class="modal fade" id="messageModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content custom-modal">
+          <div class="modal-header modal-header-custom">
+            <h5 class="modal-title">Detail Pesan</h5>
+            <button type="button" class="close" data-dismiss="modal">
+              <span style="color: white">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body" id="messageDetail">
+            <!-- Content akan diisi oleh JavaScript -->
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Jamaah Form Modal -->
+    <div class="modal fade" id="jamaahModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content custom-modal">
+          <div class="modal-header modal-header-custom">
+            <h5 class="modal-title" id="jamaahModalTitle">Tambah Jamaah Baru</h5>
+            <button type="button" class="close" data-dismiss="modal">
+              <span style="color: white">&times;</span>
+            </button>
+          </div>
+          <form id="jamaahForm" onsubmit="saveJamaah(event)">
+            <div class="modal-body">
+              <input type="hidden" id="jamaahId" />
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>Nama Lengkap *</label>
+                    <input type="text" id="jamaahNama" class="form-control" required />
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>NIK *</label>
+                    <input type="text" id="jamaahNIK" class="form-control" maxlength="16" required />
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>Tempat Lahir *</label>
+                    <input type="text" id="jamaahTempatLahir" class="form-control" required />
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>Tanggal Lahir *</label>
+                    <input type="date" id="jamaahTanggalLahir" class="form-control" required />
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>Jenis Kelamin *</label>
+                    <select id="jamaahJenisKelamin" class="form-control" required>
+                      <option value="">Pilih...</option>
+                      <option value="Laki-laki">Laki-laki</option>
+                      <option value="Perempuan">Perempuan</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>No. Telepon *</label>
+                    <input type="tel" id="jamaahTelepon" class="form-control" required />
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>Email *</label>
+                    <input type="email" id="jamaahEmail" class="form-control" required />
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>No. Paspor</label>
+                    <input type="text" id="jamaahPaspor" class="form-control" />
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>Paket Umroh *</label>
+                    <select id="jamaahPaket" class="form-control" required>
+                      <option value="">Pilih Paket...</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>Status *</label>
+                    <select id="jamaahStatus" class="form-control" required>
+                      <option value="Terdaftar">Terdaftar</option>
+                      <option value="Proses">Proses</option>
+                      <option value="Siap Berangkat">Siap Berangkat</option>
+                      <option value="Berangkat">Berangkat</option>
+                      <option value="Selesai">Selesai</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Alamat Lengkap *</label>
+                <textarea id="jamaahAlamat" class="form-control" rows="3" required></textarea>
+              </div>
+
+              <div class="form-group">
+                <label>Catatan</label>
+                <textarea id="jamaahCatatan" class="form-control" rows="2"></textarea>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+              <button type="submit" class="btn btn-success-custom"><i class="fas fa-save mr-2"></i>Simpan</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Package Form Modal -->
+    <div class="modal fade" id="packageModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content custom-modal">
+          <div class="modal-header modal-header-custom">
+            <h5 class="modal-title" id="packageModalTitle">Tambah Paket Baru</h5>
+            <button type="button" class="close" data-dismiss="modal">
+              <span style="color: white">&times;</span>
+            </button>
+          </div>
+          <form id="packageForm" onsubmit="savePackage(event)">
+            <div class="modal-body">
+              <input type="hidden" id="packageId" />
+
+              <div class="form-group">
+                <label>Nama Paket *</label>
+                <input type="text" id="packageNama" class="form-control" placeholder="Contoh: Paket Silver" required />
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>Durasi *</label>
+                    <input type="text" id="packageDurasi" class="form-control" placeholder="Contoh: 9 Hari" required />
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>Harga (Rp) *</label>
+                    <input type="number" id="packageHarga" class="form-control" placeholder="25000000" required />
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Icon *</label>
+                <select id="packageIcon" class="form-control" required>
+                  <option value="">Pilih Icon...</option>
+                  <option value="moon">🌙 Moon (Bulan)</option>
+                  <option value="star">⭐ Star (Bintang)</option>
+                  <option value="crown">👑 Crown (Mahkota)</option>
+                  <option value="gem">💎 Gem (Permata)</option>
+                  <option value="trophy">🏆 Trophy (Trofi)</option>
+                  <option value="gift">🎁 Gift (Hadiah)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Fasilitas * (pisahkan dengan enter)</label>
+                <textarea
+                  id="packageFasilitas"
+                  class="form-control"
+                  rows="6"
+                  placeholder="Tiket pesawat PP
+Hotel bintang 3
+Makan 3x sehari
+Bus wisata AC
+Pembimbing berpengalaman
+Perlengkapan umroh"
+                  required
+                ></textarea>
+                <small class="text-muted">Tulis satu fasilitas per baris</small>
+              </div>
+
+              <div class="form-group">
+                <div class="form-check">
+                  <input type="checkbox" id="packageFeatured" class="form-check-input" />
+                  <label class="form-check-label" for="packageFeatured">Tandai sebagai Paket Terpopuler</label>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+              <button type="submit" class="btn btn-success-custom"><i class="fas fa-save mr-2"></i>Simpan</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
+
+    <script>
+      // ===== FUNGSI UTAMA =====
+      function showSection(sectionName) {
+        console.log("Navigating to:", sectionName);
+
+        // Update active menu
+        $(".nav-link").removeClass("active");
+        $(`.nav-link[onclick*="${sectionName}"]`).addClass("active");
+
+        // Hide all sections
+        $('[id$="-section"]').addClass("d-none");
+
+        // Show selected section
+        $(`#${sectionName}-section`).removeClass("d-none");
+
+        // Update page title and breadcrumb
+        const titles = {
+          dashboard: "Dashboard",
+          messages: "Pesan Masuk",
+          jamaah: "Data Jamaah",
+          packages: "Kelola Paket",
+          reports: "Laporan",
+        };
+
+        $("#pageTitle").text(titles[sectionName]);
+        $("#breadcrumbActive").text(titles[sectionName]);
+
+        // Load section-specific data
+        switch (sectionName) {
+          case "messages":
+            renderMessages();
+            break;
+          case "jamaah":
+            renderJamaah();
+            break;
+          case "packages":
+            renderPackages();
+            break;
+          case "reports":
+            updateReports();
+            break;
+        }
+      }
+
+      // ===== STORAGE KEYS =====
+      const STORAGE_KEYS = {
+        PACKAGES: "umrohPackages",
+        MESSAGES: "umrohMessages",
+        JAMAAH: "umrohJamaah",
+        USER: "currentUser",
+      };
+
+      // ===== GLOBAL DATA =====
+      let messages = [];
+      let jamaahData = [];
+      let packages = [];
+      let currentUser = null;
+
+      // ===== FUNGSI AUTH =====
+      function checkAuth() {
+        const storedUser = localStorage.getItem(STORAGE_KEYS.USER);
+        if (!storedUser) {
+          window.location.href = "login.html";
+          return;
+        }
+        currentUser = JSON.parse(storedUser);
+        $("#adminName").text(currentUser.name);
+        $("#welcomeName").text(currentUser.name);
+      }
+
+      function logout() {
+        if (confirm("Apakah Anda yakin ingin keluar?")) {
+          localStorage.removeItem(STORAGE_KEYS.USER);
+          window.location.href = "login.html";
+        }
+      }
+
+      // ===== FUNGSI DATA =====
+      function loadData() {
+        messages = JSON.parse(localStorage.getItem(STORAGE_KEYS.MESSAGES) || "[]");
+        jamaahData = JSON.parse(localStorage.getItem(STORAGE_KEYS.JAMAAH) || "[]");
+        packages = JSON.parse(localStorage.getItem(STORAGE_KEYS.PACKAGES) || "[]");
+        console.log("Data loaded:", { messages: messages.length, jamaah: jamaahData.length, packages: packages.length });
+      }
+
+      function updateDashboard() {
+        $("#totalMessages").text(messages.length);
+        $("#totalJamaah").text(jamaahData.length);
+        $("#activeJamaah").text(jamaahData.filter((j) => j.status === "Berangkat").length);
+        $("#totalPackages").text(packages.length);
+
+        const unreadCount = messages.filter((m) => m.status === "Belum dibaca").length;
+        $("#messageBadge").text(unreadCount);
+        $("#topNotifBadge").text(unreadCount);
+        $("#notificationCount").text(unreadCount);
+
+        // Update charts
+        updateCharts();
+
+        updateReports();
+      }
+
+      function updateReports() {
+        const now = new Date();
+        const currentMonth = 11; // Desember = 11 (0-based)
+        const currentYear = 2025;
+
+        // FOR DESEMBER 2025 SPECIFIC
+        const messagesThisMonth = messages.filter((m) => {
+          if (!m.tanggal) return false;
+
+          const dateStr = m.tanggal.toString();
+
+          // Cari "12/2025" atau "12-2025" dalam string
+          return dateStr.includes("12/2025") || dateStr.includes("12-2025") || dateStr.includes("Desember 2025") || dateStr.includes("Dec 2025");
+        }).length;
+
+        const jamaahThisMonth = jamaahData.filter((j) => {
+          if (!j.tanggalDaftar) return false;
+
+          const dateStr = j.tanggalDaftar.toString();
+
+          return dateStr.includes("12/2025") || dateStr.includes("12-2025") || dateStr.includes("Desember 2025") || dateStr.includes("Dec 2025");
+        }).length;
+
+        const berangkatThisMonth = jamaahData.filter((j) => {
+          if (j.status !== "Berangkat") return false;
+          if (!j.tanggalDaftar) return false;
+
+          const dateStr = j.tanggalDaftar.toString();
+          return dateStr.includes("12/2025") || dateStr.includes("12-2025") || dateStr.includes("Desember 2025") || dateStr.includes("Dec 2025");
+        }).length;
+
+        // Update UI
+        $("#reportMessages").text(messagesThisMonth);
+        $("#reportJamaah").text(jamaahThisMonth);
+        $("#reportBerangkat").text(berangkatThisMonth);
+
+        // Update popular packages
+        const packageCount = {};
+        jamaahData.forEach((j) => {
+          if (j.paket) {
+            packageCount[j.paket] = (packageCount[j.paket] || 0) + 1;
+          }
+        });
+
+        const sorted = Object.entries(packageCount)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 5);
+        const popularDiv = $("#popularPackages");
+
+        if (sorted.length === 0) {
+          popularDiv.html('<p class="text-muted text-sm">Belum ada data</p>');
+        } else {
+          popularDiv.html(
+            sorted
+              .map(
+                ([name, count]) => `
+                <div class="d-flex justify-content-between align-items-center p-3 bg-light rounded mb-2">
+                    <span>${name}</span>
+                    <span class="badge badge-success">${count} jamaah</span>
+                </div>
+            `
+              )
+              .join("")
+          );
+        }
+      }
+
+      // ===== FUNGSI MESSAGES =====
+      function renderMessages() {
+        const tbody = $("#messagesTable tbody");
+        const searchTerm = $("#searchMessages").val().toLowerCase() || "";
+
+        let filteredMessages = messages;
+        if (searchTerm) {
+          filteredMessages = messages.filter((m) => m.nama.toLowerCase().includes(searchTerm) || m.email.toLowerCase().includes(searchTerm) || m.pesan.toLowerCase().includes(searchTerm));
+        }
+
+        if (filteredMessages.length === 0) {
+          tbody.html(`
+                <tr>
+                    <td colspan="6" class="text-center py-5 text-muted">
+                        <i class="fas fa-inbox fa-3x mb-3"></i>
+                        <p>Tidak ada pesan</p>
+                    </td>
+                </tr>
+            `);
+          return;
+        }
+
+        tbody.html(
+          filteredMessages
+            .map(
+              (msg) => `
+            <tr>
+                <td>
+                    <div class="d-flex align-items-center">
+                        <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(msg.nama)}&background=22c55e&color=fff&size=40" 
+                            class="rounded-circle mr-3" width="40" height="40">
+                        <span class="font-weight-bold">${msg.nama}</span>
+                    </div>
+                </td>
+                <td>${msg.email}</td>
+                <td>${msg.telepon}</td>
+                <td>
+                    <span class="badge badge-success">${msg.paket}</span>
+                </td>
+                <td>${msg.tanggal}</td>
+                <td class="text-center">
+                    <div class="btn-group">
+                        <button onclick="viewMessage(${msg.id})" class="btn btn-info btn-sm" title="Lihat">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button onclick="deleteMessage(${msg.id})" class="btn btn-danger btn-sm" title="Hapus">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `
+            )
+            .join("")
+        );
+      }
+
+      function viewMessage(id) {
+        const message = messages.find((m) => m.id === id);
+        if (message) {
+          message.status = "Dibaca";
+          localStorage.setItem(STORAGE_KEYS.MESSAGES, JSON.stringify(messages));
+          updateDashboard();
+
+          $("#messageDetail").html(`
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="font-weight-bold">Nama:</label>
+                            <p class="form-control-plaintext">${message.nama}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="font-weight-bold">Email:</label>
+                            <p class="form-control-plaintext">${message.email}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="font-weight-bold">Telepon:</label>
+                            <p class="form-control-plaintext">${message.telepon}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="font-weight-bold">Paket:</label>
+                            <p class="form-control-plaintext">${message.paket}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="font-weight-bold">Tanggal:</label>
+                    <p class="form-control-plaintext">${message.tanggal}</p>
+                </div>
+                <div class="form-group">
+                    <label class="font-weight-bold">Pesan:</label>
+                    <div class="p-3 bg-light rounded">
+                        ${message.pesan}
+                    </div>
+                </div>
+            `);
+          $("#messageModal").modal("show");
+        }
+      }
+
+      function deleteMessage(id) {
+        if (confirm("Apakah Anda yakin ingin menghapus pesan ini?")) {
+          messages = messages.filter((m) => m.id !== id);
+          localStorage.setItem(STORAGE_KEYS.MESSAGES, JSON.stringify(messages));
+          renderMessages();
+          updateDashboard();
+          alert("Pesan berhasil dihapus");
+        }
+      }
+
+      function exportMessages() {
+        if (messages.length === 0) {
+          alert("Tidak ada data untuk di-export");
+          return;
+        }
+
+        const dataStr = JSON.stringify(messages, null, 2);
+        const dataBlob = new Blob([dataStr], { type: "application/json" });
+        const url = URL.createObjectURL(dataBlob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `pesan_${new Date().getTime()}.json`;
+        link.click();
+        URL.revokeObjectURL(url);
+      }
+
+      // ===== FUNGSI JAMAAH =====
+      function renderJamaah() {
+        const tbody = $("#jamaahTable tbody");
+        const searchTerm = $("#searchJamaah").val().toLowerCase() || "";
+
+        let filteredJamaah = jamaahData;
+        if (searchTerm) {
+          filteredJamaah = jamaahData.filter((j) => j.nama.toLowerCase().includes(searchTerm) || j.nik.includes(searchTerm) || j.telepon.includes(searchTerm));
+        }
+
+        if (filteredJamaah.length === 0) {
+          tbody.html(`
+                <tr>
+                    <td colspan="7" class="text-center py-5 text-muted">
+                        <i class="fas fa-users fa-3x mb-3"></i>
+                        <p>Tidak ada data jamaah</p>
+                    </td>
+                </tr>
+            `);
+          return;
+        }
+
+        tbody.html(
+          filteredJamaah
+            .map(
+              (j) => `
+            <tr>
+                <td>
+                    <div class="d-flex align-items-center">
+                        <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(j.nama)}&background=22c55e&color=fff&size=40" 
+                            class="rounded-circle mr-3" width="40" height="40">
+                        <div>
+                            <p class="font-weight-bold mb-0">${j.nama}</p>
+                            <small class="text-muted">${j.jenisKelamin}</small>
+                        </div>
+                    </div>
+                </td>
+                <td>${j.nik}</td>
+                <td>${j.telepon}</td>
+                <td>
+                    <span class="badge badge-success">${j.paket}</span>
+                </td>
+                <td>
+                    <span class="badge ${getStatusClass(j.status)}">${j.status}</span>
+                </td>
+                <td>${j.tanggalDaftar}</td>
+                <td class="text-center">
+                    <div class="btn-group">
+                        <button onclick="editJamaah(${j.id})" class="btn btn-warning btn-sm" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button onclick="deleteJamaah(${j.id})" class="btn btn-danger btn-sm" title="Hapus">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `
+            )
+            .join("")
+        );
+      }
+
+      function getStatusClass(status) {
+        const classes = {
+          Terdaftar: "badge-secondary",
+          Proses: "badge-warning",
+          "Siap Berangkat": "badge-info",
+          Berangkat: "badge-primary",
+          Selesai: "badge-success",
+        };
+        return classes[status] || "badge-secondary";
+      }
+
+      function openJamaahModal(id = null) {
+        // Load package options
+        const paketSelect = $("#jamaahPaket");
+        paketSelect.html('<option value="">Pilih Paket...</option>' + packages.map((p) => `<option value="${p.nama}">${p.nama} - ${p.durasi}</option>`).join(""));
+
+        if (id) {
+          const jamaah = jamaahData.find((j) => j.id === id);
+          if (jamaah) {
+            $("#jamaahModalTitle").text("Edit Data Jamaah");
+            $("#jamaahId").val(jamaah.id);
+            $("#jamaahNama").val(jamaah.nama);
+            $("#jamaahNIK").val(jamaah.nik);
+            $("#jamaahTempatLahir").val(jamaah.tempatLahir);
+            $("#jamaahTanggalLahir").val(jamaah.tanggalLahir);
+            $("#jamaahJenisKelamin").val(jamaah.jenisKelamin);
+            $("#jamaahTelepon").val(jamaah.telepon);
+            $("#jamaahEmail").val(jamaah.email);
+            $("#jamaahPaspor").val(jamaah.paspor || "");
+            $("#jamaahPaket").val(jamaah.paket);
+            $("#jamaahStatus").val(jamaah.status);
+            $("#jamaahAlamat").val(jamaah.alamat);
+            $("#jamaahCatatan").val(jamaah.catatan || "");
+          }
+        } else {
+          $("#jamaahModalTitle").text("Tambah Jamaah Baru");
+          $("#jamaahForm")[0].reset();
+          $("#jamaahId").val("");
+        }
+        $("#jamaahModal").modal("show");
+      }
+
+      function editJamaah(id) {
+        openJamaahModal(id);
+      }
+
+      function saveJamaah(event) {
+        event.preventDefault();
+
+        const id = $("#jamaahId").val();
+        const now = new Date();
+
+        // Format tanggal yang konsisten
+        const tanggalDaftar = now.toLocaleString("id-ID", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+
+        const jamaahObj = {
+          id: id ? parseInt(id) : Date.now(),
+          nama: $("#jamaahNama").val(),
+          nik: $("#jamaahNIK").val(),
+          tempatLahir: $("#jamaahTempatLahir").val(),
+          tanggalLahir: $("#jamaahTanggalLahir").val(),
+          jenisKelamin: $("#jamaahJenisKelamin").val(),
+          telepon: $("#jamaahTelepon").val(),
+          email: $("#jamaahEmail").val(),
+          paspor: $("#jamaahPaspor").val(),
+          paket: $("#jamaahPaket").val(),
+          status: $("#jamaahStatus").val(),
+          alamat: $("#jamaahAlamat").val(),
+          catatan: $("#jamaahCatatan").val(),
+          tanggalDaftar: id ? jamaahData.find((j) => j.id === parseInt(id)).tanggalDaftar : tanggalDaftar,
+          tanggalDaftarISO: now.toISOString(),
+        };
+
+        if (id) {
+          const index = jamaahData.findIndex((j) => j.id === parseInt(id));
+          jamaahData[index] = jamaahObj;
+        } else {
+          jamaahData.push(jamaahObj);
+        }
+
+        localStorage.setItem(STORAGE_KEYS.JAMAAH, JSON.stringify(jamaahData));
+        renderJamaah();
+        updateDashboard(); // Ini sudah memanggil updateCharts()
+        $("#jamaahModal").modal("hide");
+        alert(id ? "Data jamaah berhasil diupdate" : "Jamaah baru berhasil ditambahkan");
+      }
+
+      function deleteJamaah(id) {
+        if (confirm("Apakah Anda yakin ingin menghapus data jamaah ini?")) {
+          jamaahData = jamaahData.filter((j) => j.id !== id);
+          localStorage.setItem(STORAGE_KEYS.JAMAAH, JSON.stringify(jamaahData));
+          renderJamaah();
+          updateDashboard(); // Ini sudah memanggil updateCharts()
+          alert("Data jamaah berhasil dihapus");
+        }
+      }
+
+      function exportJamaah() {
+        if (jamaahData.length === 0) {
+          alert("Tidak ada data untuk di-export");
+          return;
+        }
+
+        const dataStr = JSON.stringify(jamaahData, null, 2);
+        const dataBlob = new Blob([dataStr], { type: "application/json" });
+        const url = URL.createObjectURL(dataBlob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `jamaah_${new Date().getTime()}.json`;
+        link.click();
+        URL.revokeObjectURL(url);
+      }
+
+      // ===== FUNGSI PACKAGES =====
+      function renderPackages() {
+        const grid = $("#packagesGrid");
+
+        if (packages.length === 0) {
+          grid.html('<div class="col-12 text-center text-muted"><p>Belum ada paket tersedia</p></div>');
+          return;
+        }
+
+        grid.html(
+          packages
+            .map(
+              (pkg) => `
+            <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                <div class="package-card">
+                    <div class="package-header ${pkg.gradient || "gradient-primary"}">
+                        <i class="fas fa-${pkg.icon} fa-3x mb-3"></i>
+                        <h4 class="font-weight-bold">${pkg.nama}</h4>
+                        <p class="mb-0">${pkg.durasi}</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center mb-3">
+                            <h3 class="text-success font-weight-bold">Rp ${(pkg.harga / 1000000).toFixed(0)}jt</h3>
+                        </div>
+                        <div class="mb-3">
+                            <h6 class="font-weight-bold">Fasilitas:</h6>
+                            <ul class="list-unstyled mb-0">
+                                ${pkg.fasilitas
+                                  .slice(0, 3)
+                                  .map((f) => `<li><i class="fas fa-check text-success mr-2"></i>${f}</li>`)
+                                  .join("")}
+                                ${pkg.fasilitas.length > 3 ? `<li class="text-muted"><small>+${pkg.fasilitas.length - 3} fasilitas lainnya</small></li>` : ""}
+                            </ul>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button onclick="editPackage(${pkg.id})" class="btn btn-warning btn-block">
+                                <i class="fas fa-edit mr-2"></i>Edit
+                            </button>
+                            <button onclick="deletePackage(${pkg.id})" class="btn btn-danger btn-block">
+                                <i class="fas fa-trash mr-2"></i>Hapus
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `
+            )
+            .join("")
+        );
+      }
+
+      function openPackageModal(id = null) {
+        if (id) {
+          const pkg = packages.find((p) => p.id === id);
+          if (pkg) {
+            $("#packageModalTitle").text("Edit Paket");
+            $("#packageId").val(pkg.id);
+            $("#packageNama").val(pkg.nama);
+            $("#packageDurasi").val(pkg.durasi);
+            $("#packageHarga").val(pkg.harga);
+            $("#packageIcon").val(pkg.icon);
+            $("#packageFasilitas").val(pkg.fasilitas.join("\n"));
+            $("#packageFeatured").prop("checked", pkg.featured);
+          }
+        } else {
+          $("#packageModalTitle").text("Tambah Paket Baru");
+          $("#packageForm")[0].reset();
+          $("#packageId").val("");
+        }
+        $("#packageModal").modal("show");
+      }
+
+      function editPackage(id) {
+        openPackageModal(id);
+      }
+
+      function savePackage(event) {
+        event.preventDefault();
+
+        const id = $("#packageId").val();
+        const fasilitas = $("#packageFasilitas")
+          .val()
+          .split("\n")
+          .filter((f) => f.trim());
+
+        const packageObj = {
+          id: id ? parseInt(id) : Date.now(),
+          nama: $("#packageNama").val(),
+          durasi: $("#packageDurasi").val(),
+          harga: parseFloat($("#packageHarga").val()),
+          icon: $("#packageIcon").val(),
+          gradient: "gradient-primary",
+          fasilitas: fasilitas,
+          featured: $("#packageFeatured").is(":checked"),
+        };
+
+        if (id) {
+          const index = packages.findIndex((p) => p.id === parseInt(id));
+          packages[index] = packageObj;
+        } else {
+          packages.push(packageObj);
+        }
+
+        localStorage.setItem(STORAGE_KEYS.PACKAGES, JSON.stringify(packages));
+        renderPackages();
+        updateDashboard();
+        $("#packageModal").modal("hide");
+        alert(id ? "Paket berhasil diupdate" : "Paket baru berhasil ditambahkan");
+      }
+
+      function deletePackage(id) {
+        if (confirm("Apakah Anda yakin ingin menghapus paket ini?")) {
+          packages = packages.filter((p) => p.id !== id);
+          localStorage.setItem(STORAGE_KEYS.PACKAGES, JSON.stringify(packages));
+          renderPackages();
+          updateDashboard();
+          alert("Paket berhasil dihapus");
+        }
+      }
+
+      // ===== FUNGSI DATA PER BULAN =====
+      function getJamaahPerBulan() {
+        // Data dummy untuk testing - bisa diganti dengan data aktual dari localStorage
+        const bulanLabels = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Ags", "Sep", "Okt", "Nov", "Des"];
+
+        // Inisialisasi array dengan 12 bulan (0 untuk semua bulan)
+        const dataPerBulan = new Array(12).fill(0);
+
+        // Hitung jamaah per bulan berdasarkan data yang ada
+        jamaahData.forEach((jamaah) => {
+          if (jamaah.tanggalDaftar) {
+            try {
+              // Coba parsing tanggal dari berbagai format
+              let date;
+              const dateStr = jamaah.tanggalDaftar.toString();
+
+              if (dateStr.includes("/")) {
+                // Format: DD/MM/YYYY atau DD/MM/YYYY HH:mm
+                const parts = dateStr.split(" ")[0].split("/");
+                if (parts.length >= 3) {
+                  const day = parseInt(parts[0]);
+                  const month = parseInt(parts[1]) - 1; // Bulan 0-indexed
+                  const year = parseInt(parts[2]);
+                  date = new Date(year, month, day);
+                }
+              } else if (dateStr.includes("-")) {
+                // Format: YYYY-MM-DD atau ISO format
+                date = new Date(dateStr);
+              }
+
+              if (date && !isNaN(date.getTime())) {
+                const month = date.getMonth(); // 0 = Jan, 11 = Des
+                dataPerBulan[month] = (dataPerBulan[month] || 0) + 1;
+              }
+            } catch (error) {
+              console.error("Error parsing date:", jamaah.tanggalDaftar, error);
+            }
+          }
+        });
+
+        return {
+          labels: bulanLabels,
+          data: dataPerBulan,
+        };
+      }
+
+      function getJamaahPerBulanTahun2025() {
+        // Filter hanya data tahun 2025
+        const bulanLabels = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Ags", "Sep", "Okt", "Nov", "Des"];
+        const dataPerBulan = new Array(12).fill(0);
+
+        jamaahData.forEach((jamaah) => {
+          if (jamaah.tanggalDaftar) {
+            try {
+              const dateStr = jamaah.tanggalDaftar.toString();
+
+              // Cek apakah tanggal mengandung "2025"
+              if (dateStr.includes("2025")) {
+                let month = -1;
+
+                if (dateStr.includes("/")) {
+                  // Format DD/MM/2025 atau DD/MM/2025 HH:mm
+                  const parts = dateStr.split(" ")[0].split("/");
+                  if (parts.length >= 3 && parts[2].includes("2025")) {
+                    month = parseInt(parts[1]) - 1;
+                  }
+                } else if (dateStr.includes("-")) {
+                  // Format 2025-MM-DD
+                  const parts = dateStr.split("-");
+                  if (parts[0].includes("2025")) {
+                    month = parseInt(parts[1]) - 1;
+                  }
+                } else if (dateStr.includes("Desember 2025") || dateStr.includes("Dec 2025")) {
+                  month = 11; // Desember = index 11
+                } else if (dateStr.includes("Januari 2025") || dateStr.includes("Jan 2025")) {
+                  month = 0;
+                } else if (dateStr.includes("Februari 2025") || dateStr.includes("Feb 2025")) {
+                  month = 1;
+                } else if (dateStr.includes("Maret 2025") || dateStr.includes("Mar 2025")) {
+                  month = 2;
+                } else if (dateStr.includes("April 2025") || dateStr.includes("Apr 2025")) {
+                  month = 3;
+                } else if (dateStr.includes("Mei 2025") || dateStr.includes("May 2025")) {
+                  month = 4;
+                } else if (dateStr.includes("Juni 2025") || dateStr.includes("Jun 2025")) {
+                  month = 5;
+                } else if (dateStr.includes("Juli 2025") || dateStr.includes("Jul 2025")) {
+                  month = 6;
+                } else if (dateStr.includes("Agustus 2025") || dateStr.includes("Aug 2025")) {
+                  month = 7;
+                } else if (dateStr.includes("September 2025") || dateStr.includes("Sep 2025")) {
+                  month = 8;
+                } else if (dateStr.includes("Oktober 2025") || dateStr.includes("Oct 2025")) {
+                  month = 9;
+                } else if (dateStr.includes("November 2025") || dateStr.includes("Nov 2025")) {
+                  month = 10;
+                }
+
+                if (month >= 0 && month < 12) {
+                  dataPerBulan[month] += 1;
+                }
+              }
+            } catch (error) {
+              console.error("Error parsing date for 2025:", jamaah.tanggalDaftar, error);
+            }
+          }
+        });
+
+        return {
+          labels: bulanLabels,
+          data: dataPerBulan,
+        };
+      }
+
+      // ===== FUNGSI CHARTS YANG DIPERBARUI =====
+      function initCharts() {
+        // Dapatkan data jamaah per bulan
+        const chartData = getJamaahPerBulanTahun2025();
+
+        // Chart 1: Jamaah Per Bulan
+        const ctx1 = document.getElementById("jamaahChart");
+        if (ctx1) {
+          // Hancurkan chart lama jika ada
+          if (window.jamaahChartInstance) {
+            window.jamaahChartInstance.destroy();
+          }
+
+          window.jamaahChartInstance = new Chart(ctx1, {
+            type: "line",
+            data: {
+              labels: chartData.labels,
+              datasets: [
+                {
+                  label: "Jumlah Jamaah",
+                  data: chartData.data,
+                  borderColor: "#22c55e",
+                  backgroundColor: "rgba(34, 197, 94, 0.1)",
+                  borderWidth: 3,
+                  fill: true,
+                  tension: 0.4,
+                  pointBackgroundColor: "#22c55e",
+                  pointBorderColor: "#ffffff",
+                  pointBorderWidth: 2,
+                  pointRadius: 6,
+                  pointHoverRadius: 8,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  display: true,
+                  position: "top",
+                },
+                tooltip: {
+                  mode: "index",
+                  intersect: false,
+                  callbacks: {
+                    label: function (context) {
+                      return `Jamaah: ${context.parsed.y} orang`;
+                    },
+                  },
+                },
+              },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  title: {
+                    display: true,
+                    text: "Jumlah Jamaah",
+                  },
+                  ticks: {
+                    precision: 0,
+                    callback: function (value) {
+                      if (value % 1 === 0) {
+                        return value;
+                      }
+                    },
+                  },
+                },
+                x: {
+                  title: {
+                    display: true,
+                    text: "Bulan (2025)",
+                  },
+                },
+              },
+            },
+          });
+        }
+
+        // Chart 2: Status Jamaah (pie chart)
+        const ctx2 = document.getElementById("statusChart");
+        if (ctx2) {
+          // Hancurkan chart lama jika ada
+          if (window.statusChartInstance) {
+            window.statusChartInstance.destroy();
+          }
+
+          // Hitung jumlah per status
+          const statusCounts = {
+            Terdaftar: jamaahData.filter((j) => j.status === "Terdaftar").length,
+            Proses: jamaahData.filter((j) => j.status === "Proses").length,
+            "Siap Berangkat": jamaahData.filter((j) => j.status === "Siap Berangkat").length,
+            Berangkat: jamaahData.filter((j) => j.status === "Berangkat").length,
+            Selesai: jamaahData.filter((j) => j.status === "Selesai").length,
+          };
+
+          window.statusChartInstance = new Chart(ctx2, {
+            type: "doughnut",
+            data: {
+              labels: Object.keys(statusCounts),
+              datasets: [
+                {
+                  data: Object.values(statusCounts),
+                  backgroundColor: [
+                    "rgba(108, 117, 125, 0.8)", // Terdaftar - abu-abu
+                    "rgba(255, 193, 7, 0.8)", // Proses - kuning
+                    "rgba(23, 162, 184, 0.8)", // Siap Berangkat - biru muda
+                    "rgba(0, 123, 255, 0.8)", // Berangkat - biru
+                    "rgba(40, 167, 69, 0.8)", // Selesai - hijau
+                  ],
+                  borderColor: ["rgb(108, 117, 125)", "rgb(255, 193, 7)", "rgb(23, 162, 184)", "rgb(0, 123, 255)", "rgb(40, 167, 69)"],
+                  borderWidth: 2,
+                  hoverOffset: 15,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  position: "right",
+                  labels: {
+                    padding: 20,
+                    usePointStyle: true,
+                    pointStyle: "circle",
+                  },
+                },
+                tooltip: {
+                  callbacks: {
+                    label: function (context) {
+                      const label = context.label || "";
+                      const value = context.parsed || 0;
+                      const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                      const percentage = Math.round((value / total) * 100);
+                      return `${label}: ${value} orang (${percentage}%)`;
+                    },
+                  },
+                },
+              },
+            },
+          });
+        }
+      }
+
+      // ===== FUNGSI UPDATE CHART =====
+      function updateCharts() {
+        // Update data terlebih dahulu
+        loadData();
+
+        // Kemudian init ulang charts
+        initCharts();
+      }
+
+      // ===== INISIALISASI YANG DIPERBARUI =====
+      $(document).ready(function () {
+        console.log("Dashboard loaded");
+
+        // Check authentication
+        checkAuth();
+
+        // Load data
+        loadData();
+
+        // Update dashboard
+        updateDashboard();
+
+        // Render initial data
+        renderMessages();
+        renderJamaah();
+        renderPackages();
+
+        // Initialize charts
+        initCharts();
+
+        // Set default section
+        showSection("dashboard");
+      });
+    </script>
+  </body>
+</html>
